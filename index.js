@@ -1,8 +1,6 @@
 const express = require('express');
-const express = require('request');
+const request = require('request');
 const app     = express();
-
-app.use(express.static('public'));
 
 function badge(options, req, res) {
     // Format for URL
@@ -19,7 +17,7 @@ function badge(options, req, res) {
         // No default - If there's no match, assume it's a Base64 string to be used as a custom icon
     }
     // Construct
-    var url = `https://img.shields.io/badge/${left}-${right}-${color}.svg`;
+    var url = `https://img.shields.io/badge/${left}-${right}-${color}.svg?icon=1`;
     let paramsPart = "?";
     // If an icon is there, use it
     if (icon) paramsPart += "logo="+icon+"&";
@@ -100,5 +98,7 @@ app.get("/badge/discord/online/:serverId/:displayName", (req, res) => {
         }
     });
 });
+
+app.use(express.static('public'));
 
 app.listen(3000, () => console.log('Server running on port 3000'));
