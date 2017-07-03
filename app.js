@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 router.get('/', function (request, response) {
   gamequery.query({
     type: 'codmw2',
-  	host: 'localhost',
+  	host: '190.213.61.82',
     port: 28960//iSnipe
   },
   function(e,state) {
