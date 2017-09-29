@@ -2,8 +2,8 @@ const express   = require('express');
 const path      = require('path');
 const app       = express();
 const router    = express.Router();
-const gamequery = require('gamequery');
-const PORT      = 3000;
+const Gamedig   = require('gamedig');
+const PORT      = 80;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 router.get('/', function (request, response) {
-  gamequery.query({
+  Gamedig.query({
     type: 'codmw2',
   	host: '190.213.61.82',
     port: 28960//iSnipe
@@ -23,7 +23,7 @@ router.get('/', function (request, response) {
     }else{
       mw2_server1 = state;
     }
-    gamequery.query({
+    Gamedig.query({
       type: 'codmw2',
     	host: '190.213.61.82',
       port: 28961//Normal
