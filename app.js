@@ -4,7 +4,7 @@ const path      = require('path');
 const app       = express();
 const router    = express.Router();
 const Gamedig   = require('gamedig');
-const PORT      = 80;
+const PORT      = 8080;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
