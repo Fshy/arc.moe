@@ -1,170 +1,70 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Autism Research Centre</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Autism Research Centre</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous" />
+    <script src="https://use.fontawesome.com/70efdfea82.js"></script>
+    <link rel="stylesheet" href="css/main.css"/>
+  </head>
+  <body>
 
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/jquery-sakura.min.css">
-    </head>
-    <body>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div style="height:220px;" data-vide-bg="img/blossoms" data-vide-options="position: 0% 0%"></div>
-      <div id="preloader">
-          <div id="status">&nbsp;</div>
+    <div class="ui inverted menu">
+      <div class="header item">
+        <%- content.icon %>
       </div>
-      <div style="position: absolute;color: #fff;left: 20%;top: 50px;">
-        <a href="/"><h1 style="font-size:84px;display:inline;color:#fff;">arc.moe</h1></a>
-        <h3 style="display:inline;">//website wip</h3>
-        <h3>>using weeb domains unironically</h3>
-
+      <div class="header item">
+        <%= content.username %>&nbsp;<%- content.verified %>
       </div>
+      <div class="right menu">
+        <%- content.login %>
+      </div>
+    </div>
 
-    <div class="container" style="padding-top:20px;">
-      <!-- Example row of columns -->
-      <div class="row">
-
-        <div class="col-md-8" style="min-height:710px">
-
-          <a href="https://github.com/Fshy/FshyBot"><h3>2B | FshyBot</h3></a>
-          <p>
-            Discord bot built on discord.js featuring various Anime, NSFW, Music and API commands.<br>
-            + Lots of Anime Tiddy<br>
-            + Fast Music Lookup<br>
-            + Nightly Test Builds<br>
-            + Cute Avatar Guaranteed
-          </p>
-          <hr>
-          <a><h3>IW4x Server Status</h3></a>
-          <h4>
-          <% if (mw2_server1!=null) { %>
-            🔵 Server 1 - iSnipe</h4>
-            <div class="panel panel-default">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <th scope="row">Server</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server1.name)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">IP</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server1.query.address+':'+mw2_server1.query.port)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Gamemode</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server1.raw.g_gametype)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Map</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server1.map)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Players</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server1.players.length+'/'+mw2_server1.maxplayers)) %></td>
-                  </tr>
-                </tbody>
-              </table>
+    <div class="ui padded grid">
+      <div class="four wide column">
+        <div class="ui inverted vertical menu">
+          <div class="item">
+            <div class="header">Tools</div>
+            <div class="menu">
+              <a class="item" href="https://music.arc.moe">Music Bot</a>
             </div>
-          <% }else{ %>
-            🔴 Server 1 - iSnipe</h4>
-            <div class="panel panel-default">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <th scope="row">Offline</th>
-                  </tr>
-                </tbody>
-              </table>
+          </div>
+          <div class="item">
+            <div class="header">API</div>
+            <div class="menu">
+              <a class="item" href="/api/smug">Smug</a>
+              <a class="item" href="/api/placeholder">Placeholder</a>
             </div>
-          <% } %>
-
-          <h4>
-          <% if (mw2_server2!=null) { %>
-            🔵 Server 2 - Normal</h4>
-            <div class="panel panel-default">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <th scope="row">Server</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server2.name)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">IP</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server2.query.address+':'+mw2_server2.query.port)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Gamemode</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server2.raw.g_gametype)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Map</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server2.map)) %></td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Players</th>
-                    <td><%= JSON.parse(JSON.stringify(mw2_server2.players.length+'/'+mw2_server2.maxplayers)) %></td>
-                  </tr>
-                </tbody>
-              </table>
+          </div>
+          <div class="item">
+            <div class="header">GitHub</div>
+            <div class="menu">
+              <a class="item" href="https://github.com/Fshy/FshyBot">FshyBot</a>
+              <a class="item" href="https://github.com/Fshy/arc.moe">Website</a>
+              <a class="item" href="https://github.com/Fshy/Graf">Music Bot</a>
+              <a class="item" href="https://github.com/Fshy/arc.moe-shitposting">Image Manipulation</a>
             </div>
-          <% }else{ %>
-            🔴 Server 2 - Normal</h4>
-            <div class="panel panel-default">
-              <table class="table">
-                <tbody>
-                  <tr>
-                    <th scope="row">Offline</th>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          <% } %>
+          </div>
         </div>
-
-        <!-- <div class="col-md-4" id="dWidget">
-          <iframe src="https://discordapp.com/widget?id=290982567564279809&theme=dark" width="350" height="600px" allowtransparency="true" frameborder="0"></iframe>
-       </div> -->
-
-       <div class="col-md-4" id="middleImg">
-         <!-- <img class="img-responsive" src="http://i.imgur.com/jnGGXaM.jpg"></img> -->
-       </div>
       </div>
 
-    </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/jquery-1.11.2.min.js"><\/script>')</script>
+      <div class="twelve wide column">
+        <!--  -->
+        <% if (user) { %>
+          <% if (user.guildMember) { %>
+            <h2>secret stuff</h2>
+          <% } %>
+        <% } %>
+        <!--  -->
+      </div>
+    </div>
 
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.vide.js"></script>
-        <script src="js/jquery-sakura.min.js"></script>
-
-        <!-- Preloader -->
-        <script type="text/javascript">
-            //<![CDATA[
-                $(window).load(function() { // makes sure the whole site is loaded
-                    $('#status').fadeOut(); // will first fade out the loading animation
-                    $('#preloader').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
-                    $('body').delay(350).css({'overflow':'visible'});
-                })
-            //]]>
-        </script>
-
-        <script>
-            // domReady
-            $(function() {
-                $('body').sakura();
-            });
-
-            // windowLoad
-            $(window).load(function() {
-                $('body').sakura();
-            });
-        </script>
-    </body>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js" integrity="sha256-Bhi6GMQ/72uYZcJXCJ2LToOIcN3+Cx47AZnq/Bw1f7A=" crossorigin="anonymous"></script>
 </html>

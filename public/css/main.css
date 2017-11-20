@@ -1,53 +1,14 @@
-a {
-  color: #ecbcd1;
-  text-decoration: none!important;
-}
-
-a:hover {
-  color: #f2cadb;
-}
-
 body {
-  background-color: #edece8;
+  background-color: #0c0c0c;
+  color: #FFF;
 }
 
-#preloader {
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background-color:#fff; /* change if the mask should have another color then white */
-    z-index:99; /* makes sure it stays on top */
-}
-
-#status {
-    width:200px;
-    height:200px;
-    position:absolute;
-    left:50%; /* centers the loading animation horizontally one the screen */
-    top:50%; /* centers the loading animation vertically one the screen */
-    background-image:url(../img/status.gif); /* path to your loading animation */
-    background-repeat:no-repeat;
-    background-position:center;
-    margin:-100px 0 0 -100px; /* is width and height divided by two */
-}
-
-hr {
-  border-top: 1px solid #d8d0d5;
-}
-
-h2 {
-  color:#bb728a;
-}
-
-#dWidget{
-  filter:hue-rotate(110deg) opacity(.7) brightness(1.6);
-}
-
-#middleImg{
-  background-image: url("/img/2b.moe.jpg");
-  min-height: 600px;
-  background-size: 100%;
-  background-repeat: no-repeat;
+.circle_img {
+  height: auto;
+  width: 50px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
 }
