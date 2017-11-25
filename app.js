@@ -33,7 +33,7 @@ passport.use(new DiscordStrategy({
 function(accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
     return done(null, profile)
-  });
+  })
 }))
 
 // view engine setup
@@ -51,19 +51,19 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(function(req, res, next) {
-  res.locals.user = req.user;
-  next();
-});
+  res.locals.user = req.user
+  next()
+})
 
 app.get('/login', passport.authenticate('discord', { scope: scopes }))
 app.get('/auth/discord/callback',
     passport.authenticate('discord', { successRedirect: '/', failureRedirect: '/' }) // auth success
-);
+)
 
 app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-});
+    req.logout()
+    res.redirect('/')
+})
 
 app.get('/', function (req, res) {
   if (req.isAuthenticated())
@@ -91,7 +91,7 @@ app.get('/api/smug', function (req, res) {
 
 app.get('/api/placeholder/:width/:height', function (req, res) {
   res.render('smug', content={url:`${req.params.width}x${req.params.height}`})
-});
+})
 
 app.listen(process.env.PORT, function () {
   request(`http://myexternalip.com/raw`, function (e, r, b){
