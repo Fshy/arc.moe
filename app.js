@@ -3,6 +3,7 @@ const dotenv    = require('dotenv').config()
 const express   = require('express')
 const session   = require('express-session')
 const request   = require('request')
+const rp        = require('request-promise')
 const exec      = require('child_process').exec
 const path      = require('path')
 const app       = express()
@@ -56,9 +57,12 @@ app.use(function(req, res, next) {
 })
 
 app.get('/login', passport.authenticate('discord', { scope: scopes }))
-app.get('/auth/discord/callback',
-    passport.authenticate('discord', { successRedirect: '/', failureRedirect: '/' }) // auth success
-)
+app.get('/auth/discord/callback', passport.authenticate('discord', {
+  failureRedirect: '/'
+}), function (req, res) {
+  req.user.guildMember = req.user.guilds.find(function (guild) {return guild.id == process.env.GUILD_ID})
+  res.redirect('/')
+})
 
 app.get('/logout', function(req, res) {
     req.logout()
@@ -66,15 +70,17 @@ app.get('/logout', function(req, res) {
 })
 
 app.get('/', function (req, res) {
-  if (req.isAuthenticated())
-    req.user.guildMember = req.user.guilds.find(function (guild) {return guild.id == process.env.GUILD_ID})
-  content = {
-    icon:`<img src="${req.isAuthenticated() ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.jpg`:'img/server-icon.png'}" alt="" class="circle_img">`,
-    username:`${req.isAuthenticated() ? req.user.username:'arc.moe'}`,
-    verified:`${req.isAuthenticated() ? `${req.user.guildMember ? '<div class="ui green label"><i class="fa fa-check" aria-hidden="true"></i> Guild Member</div>':'<div class="ui red label"><i class="fa fa-times" aria-hidden="true"></i> Not Guild Member</div>'}`:''}`,
-    login:`<a class="item" href="${req.isAuthenticated() ? '/logout':'/login'}"><i class="fa ${req.isAuthenticated() ? 'fa-sign-out':'fa-power-off'}" aria-hidden="true"></i>&nbsp;${req.isAuthenticated() ? 'Logout':'Login'}</a>`
-  }
-  res.render('index', content)
+  const p1 = rp({uri:`https://discordapp.com/api/guilds/290982567564279809/widget.json`,json: true})
+  Promise.all([p1]).then((data) => {
+    content = {
+      icon:`<img src="${req.isAuthenticated() ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.jpg`:'img/server-icon.png'}" alt="" class="circle_img">`,
+      username:`${req.isAuthenticated() ? req.user.username:'arc.moe'}`,
+      verified:`${req.isAuthenticated() ? `${req.user.guildMember ? '<div class="ui green label"><i class="fa fa-check" aria-hidden="true"></i> Guild Member</div>':'<div class="ui red label"><i class="fa fa-times" aria-hidden="true"></i> Not Guild Member</div>'}`:''}`,
+      login:`<a class="item" href="${req.isAuthenticated() ? '/logout':'/login'}"><i class="fa ${req.isAuthenticated() ? 'fa-sign-out':'fa-power-off'}" aria-hidden="true"></i>&nbsp;${req.isAuthenticated() ? 'Logout':'Login'}</a>`,
+      server: data[0]
+    }
+    res.render('index', content)
+  }).catch(err => console.error(`Something happened`, err))
 })
 
 app.get('/api/smug', function (req, res) {
