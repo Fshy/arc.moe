@@ -8,6 +8,7 @@ const exec      = require('child_process').exec
 const path      = require('path')
 const app       = express()
 const Gamedig   = require('gamedig')
+const Jimp      = require("jimp")
 const passport  = require('passport')
 const DiscordStrategy = require('passport-discord').Strategy
 
@@ -83,24 +84,31 @@ app.get('/', function (req, res) {
   }).catch(err => console.error(`Something happened`, err))
 })
 
-app.get('/api/smug', function (req, res) {
-  execute("curl https://smugs.safe.moe/api/v1/i/r", function(data){
-    try {
-      data = JSON.parse(data)
-      content = {url:`https://smugs.safe.moe/${data.url}`}
-      res.render('smug', content)
-		} catch (e) {
-      console.log(e)
-    }
-  })
-})
-
 app.get('/api/placeholder/:width/:height', function (req, res) {
-  res.render('smug', content={url:`${req.params.width}x${req.params.height}`})
+  if (isNaN(req.params.width) || isNaN(req.params.height))
+    return res.send('Bad Format')
+  Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(function (font) {
+    new Jimp(parseInt(req.params.width), parseInt(req.params.height), 0x000000FF)
+      .print(font, Math.floor(parseInt(req.params.width)/2 - measureText(font, 'arc.moe')/2), Math.floor(parseInt(req.params.height)/2-32), 'arc.moe')
+      .print(font, Math.floor(parseInt(req.params.width)/2 - measureText(font, `${req.params.width}x${req.params.height}`)/2), Math.floor(parseInt(req.params.height)/2), `${req.params.width}x${req.params.height}`)
+      .getBuffer(Jimp.MIME_PNG, function (err, src) {
+        res.end(src, 'image/png')
+      })
+  })
+
+  function measureText(font, text) {
+    var x = 0
+    for (var i = 0; i < text.length; i++) {
+      if (font.chars[text[i]]) {
+        x += font.chars[text[i]].xoffset
+          + (font.kernings[text[i]] && font.kernings[text[i]][text[i + 1]] ? font.kernings[text[i]][text[i + 1]] : 0)
+          + (font.chars[text[i]].xadvance || 0)
+      }
+    }
+    return x
+  }
 })
 
 app.listen(process.env.PORT, function () {
-  request(`http://myexternalip.com/raw`, function (e, r, b){
-    console.log(`\n\x1b[35m\x1b[1m${process.env.NAME} Startup //\x1b[0m Listening on *:${process.env.PORT}${!e && r.statusCode===200 ? ` (External IP: ${b.replace(/\r?\n|\r/,'')})`:``}`)
-  })
+  console.log(`\n\x1b[35m\x1b[1m${process.env.NAME} Startup //\x1b[0m Listening on *:${process.env.PORT}`)
 })
