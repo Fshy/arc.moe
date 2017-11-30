@@ -74,10 +74,21 @@ app.get('/', function (req, res) {
   const p1 = rp({uri:`https://discordapp.com/api/guilds/290982567564279809/widget.json`,json: true})
   Promise.all([p1]).then((data) => {
     content = {
-      icon:`<img src="${req.isAuthenticated() ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.jpg`:'img/server-icon.png'}" alt="" class="circle_img">`,
-      username:`${req.isAuthenticated() ? req.user.username:'arc.moe'}`,
-      verified:`${req.isAuthenticated() ? `${req.user.guildMember ? '<div class="ui green label"><i class="fa fa-check" aria-hidden="true"></i> Guild Member</div>':'<div class="ui red label"><i class="fa fa-times" aria-hidden="true"></i> Not Guild Member</div>'}`:''}`,
-      login:`<a class="item" href="${req.isAuthenticated() ? '/logout':'/login'}"><i class="fa ${req.isAuthenticated() ? 'fa-sign-out':'fa-power-off'}" aria-hidden="true"></i>&nbsp;${req.isAuthenticated() ? 'Logout':'Login'}</a>`,
+      authenticated:`${req.isAuthenticated() ? true:false}`,
+      guildMember:`${req.user ? true:false}`,
+      loggedUser:{
+        icon:`${req.isAuthenticated() ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.jpg`:'img/server-icon.png'}`,
+        username:`${req.isAuthenticated() ? req.user.username:'arc.moe'}`,
+        verified: {
+          colour:'green',
+          title:`${req.isAuthenticated() ? `${req.user.guildMember ? 'Guild Member':'Not Guild Member'}`:''}`
+        }
+      },
+      login: {
+        url:`${req.isAuthenticated() ? '/logout':'/login'}`,
+        icon:`${req.isAuthenticated() ? 'fa-sign-out':'fa-power-off'}`,
+        title:`${req.isAuthenticated() ? 'Logout':'Login'}`
+      },
       server: data[0]
     }
     res.render('index', content)

@@ -15,13 +15,16 @@
 
     <div class="ui inverted menu">
       <div class="header item">
-        <%- content.icon %>
+        <img src="<%- content.loggedUser.icon %>" alt="" class="circle_img">
       </div>
       <div class="header item">
-        <%= content.username %>&nbsp;<%- content.verified %>
+        <%= content.loggedUser.username %>&nbsp;
+        <% if (user) { %>
+          <div class="ui <%- content.loggedUser.verified.colour %> label"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;<%- content.loggedUser.verified.title %></div>
+        <% } %>
       </div>
       <div class="right menu">
-        <%- content.login %>
+        <a class="item" href="<%- content.login.url %>"><i class="fa <%- content.login.icon %>" aria-hidden="true"></i>&nbsp;<%- content.login.title %></a>
       </div>
     </div>
 
