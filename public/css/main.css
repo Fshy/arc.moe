@@ -12,3 +12,11 @@ body {
   -o-border-radius: 50%;
   border-radius: 50%;
 }
+
+.ui.category.search .results {
+    width: 100%;
+}
+
+.ui.category.search>.results .category>.name {
+    padding: 9px 0px 0px 22px;
+}

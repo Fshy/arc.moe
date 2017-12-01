@@ -20,7 +20,7 @@
       <div class="header item">
         <%= content.loggedUser.username %>&nbsp;
         <% if (user) { %>
-          <div class="ui <%- content.loggedUser.verified.colour %> label"><i class="fa fa-check" aria-hidden="true"></i>&nbsp;<%- content.loggedUser.verified.title %></div>
+          <div class="ui <%- content.loggedUser.verified.colour %> label"><i class="fa <%- content.loggedUser.verified.icon %>" aria-hidden="true"></i>&nbsp;<%- content.loggedUser.verified.title %></div>
         <% } %>
       </div>
       <div class="right menu">
@@ -59,11 +59,74 @@
         <!--  -->
         <% if (user) { %>
           <% if (user.guildMember) { %>
-            <h2>secret stuff</h2>
+            <div class="ui form inverted">
+              <div class="field">
+                <div class="ui category search">
+                  <div class="ui left icon input">
+                    <input class="prompt" type="text" placeholder="Song Request...">
+                    <i class="volume up icon"></i>
+                  </div>
+                  <div class="results"></div>
+                </div>
+              </div>
+            </div>
           <% }else{ %>
-            <h1>nothing to see here</h1>
+            <div class="ui form inverted">
+              <div class="field">
+                <div class="ui category search">
+                  <div class="ui left icon input">
+                    <input type="text" placeholder="[Guild Members Only] Song Request..." disabled>
+                    <i class="volume up icon"></i>
+                  </div>
+                  <div class="results"></div>
+                </div>
+              </div>
+            </div>
           <% } %>
         <% } %>
+
+        <div class="ui floated inverted segment" style="width:100%">
+          <div class="ui floated inverted segment">
+            <img class="ui rounded image" src="api/placeholder/320/180" style="width:320px;height:180px">
+          </div>
+          <div class="ui floated inverted segment">
+            <a class="ui grey label circular large"><i class="fa fa-stop" aria-hidden="true"></i></a>
+            <a class="ui grey label circular massive"><i class="fa fa-play" aria-hidden="true"></i></a>
+            <a class="ui grey label circular large"><i class="fa fa-forward" aria-hidden="true"></i></a>
+          </div>
+          <div class="ui floated inverted segment">
+            <h1>Title</h1>
+            <p>Description</p>
+          </div>
+        </div>
+        <table class="ui compact selectable inverted table">
+          <thead>
+            <tr>
+              <th>Queue</th>
+              <th>Song</th>
+              <th class="right aligned">Requester</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Artist - Title</td>
+              <td class="right aligned">Fshy</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Artist - Title</td>
+              <td class="right aligned">Fshy</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Artist - Title</td>
+              <td class="right aligned">Fshy</td>
+            </tr>
+          </tbody>
+        </table>
+        <!--  -->
+
         <!--  -->
       </div>
       <div class="three wide column">
@@ -98,4 +161,6 @@
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js" integrity="sha256-Bhi6GMQ/72uYZcJXCJ2LToOIcN3+Cx47AZnq/Bw1f7A=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/main.js"></script>
 </html>

@@ -1,20 +1,22 @@
-const _         = require('lodash')
-const dotenv    = require('dotenv').config()
-const express   = require('express')
-const session   = require('express-session')
-const request   = require('request')
-const rp        = require('request-promise')
-const exec      = require('child_process').exec
-const path      = require('path')
-const app       = express()
-const Gamedig   = require('gamedig')
-const Jimp      = require("jimp")
-const passport  = require('passport')
+const _               = require('lodash')
+const dotenv          = require('dotenv').config()
+const request         = require('request')
+const rp              = require('request-promise')
+const path            = require('path')
+const Gamedig         = require('gamedig')
+const Jimp            = require('jimp')
+const lib             = require('./lib')
+
+const passport        = require('passport')
 const DiscordStrategy = require('passport-discord').Strategy
 
-function execute(command, callback){
-  exec(command, function(error, stdout, stderr){ callback(stdout) })
-}
+const express         = require('express')
+const session         = require('express-session')
+const app             = express()
+const server          = require('http').createServer(app)
+const io              = require('socket.io')(server)
+
+var scopes = ['identify', 'guilds']
 
 passport.serializeUser(function(user, done) {
   done(null, user)
@@ -23,8 +25,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(obj, done) {
   done(null, obj)
 })
-
-var scopes = ['identify', 'guilds'/*,'email', 'connections', 'guilds.join'*/]
 
 passport.use(new DiscordStrategy({
     clientID: process.env.CLIENT_ID,
@@ -80,7 +80,8 @@ app.get('/', function (req, res) {
         icon:`${req.isAuthenticated() ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.jpg`:'img/server-icon.png'}`,
         username:`${req.isAuthenticated() ? req.user.username:'arc.moe'}`,
         verified: {
-          colour:'green',
+          colour:`${req.isAuthenticated() ? `${req.user.guildMember ? 'green':'red'}`:''}`,
+          icon: `${req.isAuthenticated() ? `${req.user.guildMember ? 'fa-check':'fa-ban'}`:''}`,
           title:`${req.isAuthenticated() ? `${req.user.guildMember ? 'Guild Member':'Not Guild Member'}`:''}`
         }
       },
@@ -100,26 +101,41 @@ app.get('/api/placeholder/:width/:height', function (req, res) {
     return res.send('Bad Format')
   Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(function (font) {
     new Jimp(parseInt(req.params.width), parseInt(req.params.height), 0x000000FF)
-      .print(font, Math.floor(parseInt(req.params.width)/2 - measureText(font, 'arc.moe')/2), Math.floor(parseInt(req.params.height)/2-32), 'arc.moe')
-      .print(font, Math.floor(parseInt(req.params.width)/2 - measureText(font, `${req.params.width}x${req.params.height}`)/2), Math.floor(parseInt(req.params.height)/2), `${req.params.width}x${req.params.height}`)
+      .print(font, Math.floor(parseInt(req.params.width)/2 - lib.measureText(font, 'arc.moe')/2), Math.floor(parseInt(req.params.height)/2-32), 'arc.moe')
+      .print(font, Math.floor(parseInt(req.params.width)/2 - lib.measureText(font, `${req.params.width}x${req.params.height}`)/2), Math.floor(parseInt(req.params.height)/2), `${req.params.width}x${req.params.height}`)
       .getBuffer(Jimp.MIME_PNG, function (err, src) {
         res.end(src, 'image/png')
       })
   })
+})
 
-  function measureText(font, text) {
-    var x = 0
-    for (var i = 0; i < text.length; i++) {
-      if (font.chars[text[i]]) {
-        x += font.chars[text[i]].xoffset
-          + (font.kernings[text[i]] && font.kernings[text[i]][text[i + 1]] ? font.kernings[text[i]][text[i + 1]] : 0)
-          + (font.chars[text[i]].xadvance || 0)
-      }
-    }
-    return x
+app.get('/api/youtube/search/:query', function (req, res) {
+  if (req.user && req.user.guildMember) {
+    rp({
+      uri:`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${req.params.query}&type=video&videoCategoryId=10&key=${process.env.YOUTUBE}`,
+      json: true
+    }).then(function (result) {
+      res.json(result)
+    })
+  }else {
+    res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
+    console.log(`Unauthorized Request on */api/youtube/search/${req.params.query} from ${req.connection.remoteAddress}`)
   }
 })
 
-app.listen(process.env.PORT, function () {
+app.get('/api/youtube/song/:videoId', function (req, res) {
+  if (req.user && req.user.guildMember) {
+    res.redirect('/')
+  }else {
+    res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
+    console.log(`Unauthorized Request on */api/youtube/song/${req.params.videoId} from ${req.connection.remoteAddress}`)
+  }
+})
+
+io.on('connection', function(socket){
+
+})
+
+server.listen(process.env.PORT, function () {
   console.log(`\n\x1b[35m\x1b[1m${process.env.NAME} Startup //\x1b[0m Listening on *:${process.env.PORT}`)
 })
