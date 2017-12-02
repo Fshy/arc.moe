@@ -119,16 +119,16 @@ app.get('/api/youtube/search/:query', function (req, res) {
     })
   }else {
     res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
-    console.log(`Unauthorized Request on */api/youtube/search/${req.params.query} from ${req.connection.remoteAddress}`)
+    console.log(`Unauthorized Request on */api/youtube/search/${req.params.query}`)
   }
 })
 
-app.get('/api/youtube/song/:videoId', function (req, res) {
+app.post('/api/youtube/song/:videoId', function (req, res) {
   if (req.user && req.user.guildMember) {
-    res.redirect('/')
+    console.log(`Queueing Video ID ${req.params.videoId}`)
   }else {
     res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
-    console.log(`Unauthorized Request on */api/youtube/song/${req.params.videoId} from ${req.connection.remoteAddress}`)
+    console.log(`Unauthorized Request on */api/youtube/song/${req.params.videoId}`)
   }
 })
 
