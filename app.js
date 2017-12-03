@@ -165,7 +165,6 @@ io.on('connection', function(socket){
 
 client.on('message', (message) => {
   if(message.author.bot) return
-  voiceConnection.disconnect()
 })
 
 client.login(process.env.TOKEN).then(
