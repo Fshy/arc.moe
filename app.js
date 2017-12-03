@@ -22,7 +22,16 @@ const io              = require('socket.io')(server)
 const Discord         = require('discord.js')
 const client          = new Discord.Client();
 
-var scopes = ['identify', 'guilds']
+const scopes          = ['identify', 'guilds']
+const streamOptions   = {passes:2, volume:0.15}
+
+global.voiceConnection
+global.dispatcher
+global.song = {
+  title: `Artist - Title`,
+  channel: `Channel`,
+  thumbnail: `api/placeholder/320/180`
+}
 
 passport.serializeUser(function(user, done) {
   done(null, user)
@@ -133,7 +142,17 @@ app.get('/api/youtube/search/:query', function (req, res) {
 
 app.post('/api/youtube/song/:videoId', function (req, res) {
   if (req.user && req.user.guildMember) {
-    log('server',`Queueing Video ID ${req.params.videoId} from ${req.user.username}`)
+    if (voiceConnection) {
+      dispatcher = voiceConnection.playStream(ytdl(req.params.videoId, {filter : 'audioonly'}), streamOptions)
+      rp({uri:`https://www.googleapis.com/youtube/v3/videos?id=${req.params.videoId}&part=snippet&key=${process.env.YOUTUBE}`,json:true})
+      .then(data => {
+        song.title = data.items[0].snippet.title,
+        song.channel = data.items[0].snippet.channelTitle,
+        song.thumbnail = data.items[0].snippet.thumbnails.medium.url
+        io.emit('song', song)
+        log('server',`${req.user.username} has Queued "${song.title}" for Playback`)
+      })
+    }
   }else {
     res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
     log('server',`Unauthorized Request on /api/youtube/song/${req.params.videoId}`)
@@ -141,11 +160,12 @@ app.post('/api/youtube/song/:videoId', function (req, res) {
 })
 
 io.on('connection', function(socket){
-  //
+  io.emit('song', song)
 })
 
 client.on('message', (message) => {
   if(message.author.bot) return
+  voiceConnection.disconnect()
 })
 
 client.login(process.env.TOKEN).then(
@@ -157,10 +177,16 @@ client.on('ready', () => {
   client.user.setPresence({game:{name:'https@nginx'}}).then(
     log('discord',`Presence Set`)
   )
-  client.channels.get(process.env.GUILD_VOICECHANNEL).join()
-  .then(connection =>
-    log(`discord`,`Joined VoiceChannel "${connection.channel.name}"`)
-  ).catch(console.error)
+  if (_.isEmpty(client.voiceConnections )) {
+    client.channels.get(process.env.GUILD_VOICECHANNEL).join()
+    .then(connection => {
+      voiceConnection = connection
+      log(`discord`,`Joined VoiceChannel "${connection.channel.name}"`)
+      connection.on('disconnect', () => {
+        voiceConnection = null
+      })
+    }).catch(console.error)
+  }
 })
 
 server.listen(process.env.PORT, function () {

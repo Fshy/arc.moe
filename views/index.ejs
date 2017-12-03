@@ -87,12 +87,12 @@
 
         <div class="ui floated inverted segment" style="width:100%">
           <div class="ui floated inverted segment">
-            <img class="ui rounded image" src="<%= content.np_thumbnail || 'api/placeholder/320/180' %>" style="width:320px;height:180px">
+            <img id="song_thumbnail" class="ui rounded image" src="api/placeholder/320/180" style="width:320px;height:180px">
           </div>
           <div class="ui floated inverted segment">
             <div class="ui floated inverted segment">
-              <h1><%= content.np_title || 'Artist - Title' %></h1>
-              <p><%= content.np_channel || 'Channel' %></p>
+              <h1 id="song_title">Artist - Title</h1>
+              <p id="song_channel">Channel</p>
             </div>
             <br>
             <a class="ui grey label circular large"><i class="fa fa-stop" aria-hidden="true"></i></a>

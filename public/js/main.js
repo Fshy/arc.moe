@@ -1,8 +1,10 @@
 $(function () {
   var socket = io()
-  socket.on('msg', function(msg){
-    $('#messages').html(msg)
-  })
+  socket.on('song', function(song){
+    $('#song_title').text(song.title)
+    $('#song_channel').text(song.channel)
+    $('#song_thumbnail').attr("src", song.thumbnail)
+  });
 })
 
 $('.ui.search')
@@ -11,23 +13,15 @@ $('.ui.search')
     minCharacters : 3,
     transition    : 'slide',
     onSelect: function(result, response) {
-      $('#songreq').val('')
-      $.post(`api/youtube/song/${result.actionURL}`, function(data) {
-        //
-      })
+      $.post(`api/youtube/song/${result.actionURL}`)
     },
     apiSettings   : {
       onResponse: function(youtubeResponse) {
-        var
-        response = {
-          results : {}
-        }
-
+        var response = {results : {}}
         $.each(youtubeResponse.items, function(index, item) {
-          var language   = `<img src="${item.snippet.thumbnails.default.url}" height="42px">`
-
-          response.results[language] = {
-            name    : `${language}`,
+          var thumb   = `<img src="${item.snippet.thumbnails.default.url}" height="42px">`
+          response.results[thumb] = {
+            name    : `${thumb}`,
             results : [{
               title       : item.snippet.title,
               description : item.snippet.channelTitle,
