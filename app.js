@@ -5,16 +5,22 @@ const rp              = require('request-promise')
 const path            = require('path')
 const Gamedig         = require('gamedig')
 const Jimp            = require('jimp')
+const ytdl            = require('ytdl-core')
 const lib             = require('./lib')
+const log             = require('./lib').log
 
 const passport        = require('passport')
 const DiscordStrategy = require('passport-discord').Strategy
 
 const express         = require('express')
 const session         = require('express-session')
+const MongoStore      = require('connect-mongo')(session)
 const app             = express()
 const server          = require('http').createServer(app)
 const io              = require('socket.io')(server)
+
+const Discord         = require('discord.js')
+const client          = new Discord.Client();
 
 var scopes = ['identify', 'guilds']
 
@@ -47,8 +53,10 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new MongoStore({url: 'mongodb://localhost/arcmoe'})
 }))
+
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -119,23 +127,42 @@ app.get('/api/youtube/search/:query', function (req, res) {
     })
   }else {
     res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
-    console.log(`Unauthorized Request on */api/youtube/search/${req.params.query}`)
+    log('server',`Unauthorized Request on /api/youtube/search/${req.params.query}`)
   }
 })
 
 app.post('/api/youtube/song/:videoId', function (req, res) {
   if (req.user && req.user.guildMember) {
-    console.log(`Queueing Video ID ${req.params.videoId}`)
+    log('server',`Queueing Video ID ${req.params.videoId} from ${req.user.username}`)
   }else {
     res.status(401).send(`<h1>Unauthorized Request</h1>Guild Members Only Resource`)
-    console.log(`Unauthorized Request on */api/youtube/song/${req.params.videoId}`)
+    log('server',`Unauthorized Request on /api/youtube/song/${req.params.videoId}`)
   }
 })
 
 io.on('connection', function(socket){
+  //
+})
 
+client.on('message', (message) => {
+  if(message.author.bot) return
+})
+
+client.login(process.env.TOKEN).then(
+  log('discord',`Authenticated`)
+)
+
+client.on('ready', () => {
+  log('discord',`Ready`)
+  client.user.setPresence({game:{name:'https@nginx'}}).then(
+    log('discord',`Presence Set`)
+  )
+  client.channels.get(process.env.GUILD_VOICECHANNEL).join()
+  .then(connection =>
+    log(`discord`,`Joined VoiceChannel "${connection.channel.name}"`)
+  ).catch(console.error)
 })
 
 server.listen(process.env.PORT, function () {
-  console.log(`\n\x1b[35m\x1b[1m${process.env.NAME} Startup //\x1b[0m Listening on *:${process.env.PORT}`)
+  log(`server`,`Listening on *:${process.env.PORT}`)
 })
