@@ -143,6 +143,9 @@ app.get('/api/youtube/search/:query', function (req, res) {
 app.post('/api/youtube/song/:videoId', function (req, res) {
   if (req.user && req.user.guildMember) {
     if (voiceConnection) {
+      dispatcher = voiceConnection.player.dispatcher;
+      if (dispatcher)
+        dispatcher.end()
       dispatcher = voiceConnection.playStream(ytdl(req.params.videoId, {filter : 'audioonly'}), streamOptions)
       rp({uri:`https://www.googleapis.com/youtube/v3/videos?id=${req.params.videoId}&part=snippet&key=${process.env.YOUTUBE}`,json:true})
       .then(data => {
@@ -151,6 +154,7 @@ app.post('/api/youtube/song/:videoId', function (req, res) {
         song.thumbnail = data.items[0].snippet.thumbnails.medium.url
         io.emit('song', song)
         log('server',`${req.user.username} has Queued "${song.title}" for Playback`)
+        res.sendStatus(200)
       })
     }
   }else {

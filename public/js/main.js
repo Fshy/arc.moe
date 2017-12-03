@@ -13,7 +13,9 @@ $('.ui.search')
     minCharacters : 3,
     transition    : 'slide',
     onSelect: function(result, response) {
-      $.post(`api/youtube/song/${result.actionURL}`)
+      $.post(`api/youtube/song/${result.actionURL}`).then(data => {
+        document.getElementById("song_req").value = ""
+      })
     },
     apiSettings   : {
       onResponse: function(youtubeResponse) {
