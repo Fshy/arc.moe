@@ -163,6 +163,33 @@ app.post('/api/youtube/song/:videoId', function (req, res) {
   }
 })
 
+app.use(function(req, res){
+  content = {
+    authenticated:`${req.isAuthenticated() ? true:false}`,
+    guildMember:`${req.user ? true:false}`,
+    loggedUser:{
+      icon:`${req.isAuthenticated() ? `https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.jpg`:'img/server-icon.png'}`,
+      username:`${req.isAuthenticated() ? req.user.username:'arc.moe'}`,
+      verified: {
+        colour:`${req.isAuthenticated() ? `${req.user.guildMember ? 'green':'red'}`:''}`,
+        icon: `${req.isAuthenticated() ? `${req.user.guildMember ? 'fa-check':'fa-ban'}`:''}`,
+        title:`${req.isAuthenticated() ? `${req.user.guildMember ? 'Guild Member':'Not Guild Member'}`:''}`
+      }
+    },
+    login: {
+      url:`${req.isAuthenticated() ? '/logout':'/login'}`,
+      icon:`${req.isAuthenticated() ? 'fa-sign-out':'fa-power-off'}`,
+      title:`${req.isAuthenticated() ? 'Logout':'Login'}`
+    }
+  }
+  res.render('error', {
+    status: 404,
+    route: req.url,
+    message: `what are you doing, there's nothing here cuz`,
+    content: content
+  })
+})
+
 io.on('connection', function(socket){
   io.emit('song', song)
 })

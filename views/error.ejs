@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Autism Research Centre</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="img/server-icon.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous" />
+    <script src="https://use.fontawesome.com/70efdfea82.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/zenburn.min.css" integrity="sha256-l1EdIP3q4FnAcLeY5yyxDdRtd5e13V7VXLXjuYj2gRA=" crossorigin="anonymous" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link rel="stylesheet" href="../css/main.css"/>
+  </head>
+  <body>
+
+    <div class="ui inverted menu">
+      <div class="header item">
+        <img src="<%- content.loggedUser.icon %>" alt="" class="circle_img">
+      </div>
+      <div class="header item">
+        <%= content.loggedUser.username %>&nbsp;
+        <% if (user) { %>
+          <div class="ui <%- content.loggedUser.verified.colour %> label"><i class="fa <%- content.loggedUser.verified.icon %>" aria-hidden="true"></i>&nbsp;<%- content.loggedUser.verified.title %></div>
+        <% } %>
+      </div>
+      <div class="right menu">
+        <a class="item" href="<%- content.login.url %>"><i class="fa <%- content.login.icon %>" aria-hidden="true"></i>&nbsp;<%- content.login.title %></a>
+      </div>
+    </div>
+
+    <div class="ui stackable padded grid middle aligned">
+      <div class="ui two column centered grid middle aligned">
+        <div class="column ">
+          <img class="ui centered small image" style="user-select:none;-webkit-user-drag: none;" src="../img/error.png" alt="">
+          <pre>
+            <code class="js">
+            error: <%= status %>
+            route: "<%= route %>"
+            message: "<%= message %>"
+            </code>
+          </pre>
+          <a href="/">
+            <button class="ui inverted button">Back</button>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js" integrity="sha256-Bhi6GMQ/72uYZcJXCJ2LToOIcN3+Cx47AZnq/Bw1f7A=" crossorigin="anonymous"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../js/main.js"></script>
+</html>
