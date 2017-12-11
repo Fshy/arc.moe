@@ -6,10 +6,10 @@
     <title>Autism Research Centre</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/png" href="img/server-icon.png"/>
+    <link rel="shortcut icon" type="image/png" href="../img/server-icon.png"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" integrity="sha256-/Z28yXtfBv/6/alw+yZuODgTbKZm86IKbPE/5kjO/xY=" crossorigin="anonymous" />
     <script src="https://use.fontawesome.com/70efdfea82.js"></script>
-    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="../css/main.css"/>
   </head>
   <body>
 
@@ -22,6 +22,12 @@
         <% if (user) { %>
           <div class="ui <%- content.loggedUser.verified.colour %> label"><i class="fa <%- content.loggedUser.verified.icon %>" aria-hidden="true"></i>&nbsp;<%- content.loggedUser.verified.title %></div>
         <% } %>
+      </div>
+      <div class="header item">
+        <img src="../img/BTC.svg" height="25px" alt="Bitcoin"><div id="btc" class="ui active inline mini inverted loader"></div>
+      </div>
+      <div class="header item">
+        <img src="../img/ETH.svg" height="25px" alt="Ethereum"><div id="eth" class="ui active inline mini inverted loader"></div>
       </div>
       <div class="right menu">
         <a class="item" href="<%- content.login.url %>"><i class="fa <%- content.login.icon %>" aria-hidden="true"></i>&nbsp;<%- content.login.title %></a>
@@ -153,7 +159,9 @@
 
   </body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-color/2.1.2/jquery.color.min.js" integrity="sha256-H28SdxWrZ387Ldn0qogCzFiUDDxfPiNIyJX7BECQkDE=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.js" integrity="sha256-Bhi6GMQ/72uYZcJXCJ2LToOIcN3+Cx47AZnq/Bw1f7A=" crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="js/main.js"></script>
+  <script src="../js/ccc-streamer-utilities.js"></script>
+  <script src="../js/main.js"></script>
 </html>
