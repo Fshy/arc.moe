@@ -163,6 +163,10 @@ app.post('/api/youtube/song/:videoId', function (req, res) {
   }
 })
 
+app.get('/cyberpunk', function (req, res) {
+  res.render('cyberpunk')
+})
+
 app.use(function(req, res){
   content = {
     authenticated:`${req.isAuthenticated() ? true:false}`,
